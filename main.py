@@ -25,13 +25,13 @@ SEARCH_I_NAME = "comb_emb_vsearch"
 
 # API CONSTANTS
 MONGO_KEY = os.getenv('MONGO_KEY')
-OA_KEY = os.getenv('OPENAI_API_KEY')
 HF_KEY = os.getenv('HF_TOKEN')
+# OA_KEY = os.getenv('OPENAI_API_KEY')
+
 
 # File constants
 FILENAME = 'data/Mental_Health_FAQ.csv'
 
-openai.api_key = os.getenv(OA_KEY)
 
 #Data parsing
 def parse_data(filename):
@@ -86,11 +86,15 @@ if __name__ == '__main__':
     client = MongoClient(MONGO_KEY, server_api=ServerApi('1'))
     # transformers.logging.set_verbosity_info()
 
+    #Setup OpenAI connection
+    # openai.api_key = os.getenv(OA_KEY)
+
     # Load the CSV file
     data = parse_data(FILENAME)
 
     # Load CSV data into DB and add vector embeddings
     load_csv_to_mongodb(data, client, DB_NAME, COLLECTION_NAME)
+    
     
     question_mode = True
     prompt = input("What can I help you with today?\n")

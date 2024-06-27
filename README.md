@@ -25,15 +25,35 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
    ```
    pip install -r requirements.txt
    ```
-3. Add HuggingFace and MongoDB Atlas tokens as environment variables (```$ HF_TOKEN``` and ```$ MONGO_TOKEN``` respectively), or change them in ```main.py``` under ```API Constants```.
+3. Download Ollama from https://ollama.com/
+
 
 ## Usage
 1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```main.py``` i.e. ```DB_NAME, COLLECTION_NAME```.
-2. Start Ollama and run:
+2. Add HuggingFace and MongoDB Atlas tokens as environment variables (```$ HF_TOKEN``` and ```$ MONGO_TOKEN``` respectively), or change them in ```main.py``` under ```API Constants```.
+3. Run load.py to populate the database with data and embeddings
+   ```
+   python load_data.py
+   ```
+4. Go to [mongo.db](https://cloud.mongodb.com/) > Browse Collections > Atlas Search > Create Search Index > JSON Editor. Input the code below and name it "comb_emb_vsearch" (alternatively you can change ```SEARCH_I_NAME``` in ```load_data.py``` to match the name you provide).
+   ```
+   {"mappings": {
+       "dynamic": True,
+       "fields": {
+           "combined_embedding": {
+               "dimensions": 384,
+               "similarity": "dotProduct",
+               "type": "knnVector"
+               }
+           }
+       }
+   }
+   ```
+4. Start Ollama and run:
    ```
    ollama run mistral
    ```
-4. Run main.py to populate the database with data and embeddings, and run the application:
+5. Run the application
    ```
-   python main.py
+   python app.py
    ```

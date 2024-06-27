@@ -27,7 +27,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
    ```
 
 ## Usage
-1. Start the MongoDB Atlas cluster and ensure it is configured correctly.
+1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```main.py``` i.e. ```DB_NAME, COLLECTION_NAME```.
 2. Start Ollama and run:
    ```
    ollama run mistral

@@ -6,8 +6,6 @@ from prompt import context_from_data, PROMPT_TEMPLATE
 import openai
 
 import transformers
-
-
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
@@ -58,7 +56,7 @@ def get_similarity(query, collection):
 def get_response(prompt):
     return get_response_Ollama_local(prompt)
 
-def generate_response(query, db, collection):
+def generate_response(query, client, db, collection):
     db = client[db]
     collection = db[collection]
     data = list(get_similarity(query, collection))
@@ -94,19 +92,6 @@ if __name__ == '__main__':
 
     # Load CSV data into DB and add vector embeddings
     load_csv_to_mongodb(data, client, DB_NAME, COLLECTION_NAME)
-    
-    
-    question_mode = True
-    prompt = input("What can I help you with today?\n")
-    print(generate_response(prompt, DB_NAME, COLLECTION_NAME))
-    while question_mode:
-        if input("Is there anything else I can help you with? (Y/N)\n").lower() in ['no', 'n']:
-            question_mode = False
-            break
-        prompt = input("What can I help you with today?\n")
-        print(generate_response(prompt, DB_NAME, COLLECTION_NAME))
-    
-    print("Thank you for using your mental health companion, if there is anything else I can help in the future please don't be shy! :)")
     
     
     

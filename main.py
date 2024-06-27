@@ -24,7 +24,7 @@ COLLECTION_NAME = 'QAs'
 SEARCH_I_NAME = "comb_emb_vsearch"
 
 # API CONSTANTS
-MONGO_KEY = os.getenv('MONGO_KEY')
+MONGO_KEY = os.getenv('MONGO_TOKEN')
 HF_KEY = os.getenv('HF_TOKEN')
 # OA_KEY = os.getenv('OPENAI_API_KEY')
 

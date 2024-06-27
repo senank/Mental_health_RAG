@@ -25,7 +25,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
    ```
    pip install -r requirements.txt
    ```
-3. Add HuggingFace and MongoDB Atlas tokens as environment variables (```HF_TOKEN``` and ```MONGO_TOKEN``` respectively), or change them in ```main.py``` under ```API Constants```.
+3. Add HuggingFace and MongoDB Atlas tokens as environment variables (```$ HF_TOKEN``` and ```$ MONGO_TOKEN``` respectively), or change them in ```main.py``` under ```API Constants```.
 
 ## Usage
 1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```main.py``` i.e. ```DB_NAME, COLLECTION_NAME```.

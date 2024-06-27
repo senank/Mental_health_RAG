@@ -11,6 +11,9 @@ from pdb import set_trace as pdb
 
 import os
 
+# Constants
+OLLAMA_MODEL = 'mistral'
+
 # Embeddings #
 # OA
 def get_embedding_function_OA():
@@ -72,5 +75,5 @@ cognitive states.",
     
 def get_response_Ollama_local(prompt):
     # Running Ollama mistral locally
-    model = Ollama(model='llama3')
+    model = Ollama(model=OLLAMA_MODEL)
     return model.invoke(prompt)

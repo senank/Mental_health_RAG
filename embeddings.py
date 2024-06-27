@@ -4,7 +4,7 @@ from transformers import pipeline
 
 from langchain_openai import ChatOpenAI
 from langchain_community.llms.ollama import Ollama
-from transformers import AutoTokenizer, LlamaForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from pdb import set_trace as pdb
 
@@ -46,14 +46,13 @@ def get_response_Ollama(prompt):
     # Load model and tokenizer
     model_name = "meta-llama/Llama-2-7b-hf"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = LlamaForCausalLM.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
 
     # Encode the prompt
     inputs = tokenizer(prompt, return_tensors="pt")
 
     # Generate a response
     output = model.generate(inputs.input_ids, max_length=150)
-    pdb()
 
     # Decode the generated tokens to a string
     response = tokenizer.decode(output[0], skip_special_tokens=True)

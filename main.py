@@ -1,9 +1,12 @@
 import pandas as pd
 
-from embeddings import generate_embedding_HF, get_response_Ollama
+from embeddings import generate_embedding_HF, get_response_Ollama_pipe
 from db_helpers import load_csv_to_mongodb
 from prompt import context_from_data, PROMPT_TEMPLATE
 import openai
+
+import transformers
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 
 from pymongo.mongo_client import MongoClient
@@ -24,14 +27,14 @@ SEARCH_I_NAME = "comb_emb_vsearch"
 # API CONSTANTS
 MONGO_KEY = os.getenv('MONGO_KEY')
 OA_KEY = os.getenv('OPENAI_API_KEY')
-HF_KEY = os.getenv('HF_KEY')
+HF_KEY = os.getenv('HF_TOKEN')
 
 # File constants
 FILENAME = 'data/Mental_Health_FAQ.csv'
 
 openai.api_key = os.getenv(OA_KEY)
 
-
+#Data parsing
 def parse_data(filename):
     df = pd.read_csv(filename)
     questions = df['Questions'].tolist()
@@ -54,7 +57,7 @@ def get_similarity(query, collection):
 
 
 def get_response(prompt):
-    return get_response_Ollama(prompt)
+    return get_response_Ollama_pipe(prompt)
 
 def generate_response(query, db, collection):
     db = client[db]
@@ -63,8 +66,10 @@ def generate_response(query, db, collection):
     prompt = generate_prompt(query, data)
     response = get_response(prompt)
     formatted_response = format_response(response, data)
-    pdb()
+    return formatted_response
     
+    
+# Prompt/Response formating
 def generate_prompt(query, data):
     context = context_from_data(data)
     prompt = PROMPT_TEMPLATE.format(query=query, context=context)
@@ -77,21 +82,28 @@ def format_response(response, data):
     return "{}. \n (Sources: {})".format(response, ", ".join(sources))
     
 
-
-    
-
-
 if __name__ == '__main__':
     #Connect to DB
     client = MongoClient(MONGO_KEY, server_api=ServerApi('1'))
+    # transformers.logging.set_verbosity_info()
 
     # Load the CSV file
     data = parse_data(FILENAME)
 
     # Load CSV data into DB and add vector embeddings
     load_csv_to_mongodb(data, client, DB_NAME, COLLECTION_NAME)
-
-    generate_response("how do i deal with depression", DB_NAME, COLLECTION_NAME)
+    
+    question_mode = True
+    prompt = input("What can I help you with today?\n")
+    print(generate_response(prompt, DB_NAME, COLLECTION_NAME))
+    while question_mode:
+        if input("Is there anything else I can help you with? (Y/N)\n").lower() in ['no', 'n']:
+            question_mode = False
+            break
+        prompt = input("What can I help you with today?\n")
+        print(generate_response(prompt, DB_NAME, COLLECTION_NAME))
+    
+    print("Thank you for using your mental health companion, if there is anything else I can help in the future please don't be shy! :)")
     
     
     

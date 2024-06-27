@@ -16,7 +16,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
 - PyTorch
 - Ollama running locally 
 
-## Installation
+## Installation and Setup
 1. Clone the repository:
    ```
    git clone https://github.com/senank/Mental_health_RAG.git
@@ -25,6 +25,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
    ```
    pip install -r requirements.txt
    ```
+3. Add HuggingFace and MongoDB Atlas tokens as environment variables, or change them in ```main.py``` under ```API Constants```.
 
 ## Usage
 1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```main.py``` i.e. ```DB_NAME, COLLECTION_NAME```.

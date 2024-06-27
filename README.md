@@ -57,3 +57,4 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
    ```
    python app.py
    ```
+Note: To stop the application either hit ctrl+c or press n when the prompt "Is there anything else I can help you with? (Y/N)" appears

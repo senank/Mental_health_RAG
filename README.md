@@ -36,8 +36,3 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
    ```
    python main.py
    ```
-
-
-## API Endpoints
-- **generate_response**: Takes a user prompt and returns a generated response based on the prompt and relevant retrieved data.
-

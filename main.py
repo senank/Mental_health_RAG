@@ -1,14 +1,7 @@
 import pandas as pd
 
-from elasticsearch import Elasticsearch
-from elasticsearch.helpers import bulk
-
-from langchain_community.embeddings.ollama import OllamaEmbeddings
-
-
-from langchain_community.vectorstores import Chroma
-
 from embeddings import generate_embedding_HF
+from db_helpers import load_csv_to_mongodb
 import openai
 
 from pymongo.mongo_client import MongoClient
@@ -23,79 +16,39 @@ CHROMA_PATH = "chroma"
 #MongoDB
 DB_NAME = 'MentalhealthQA'
 COLLECTION_NAME = 'QAs'
+SEARCH_I_NAME = "comb_emb_vsearch"
 
 # API CONSTANTS
-URI = os.getenv('URI')
+MONGO_KEY = os.getenv('MONGO_KEY')
 OA_KEY = os.getenv('OPENAI_API_KEY')
 HF_KEY = os.getenv('HF_KEY')
 
 openai.api_key = os.getenv(OA_KEY)
 
 
-
 #Connect to DB
-client = MongoClient(URI, server_api=ServerApi('1'))
-client.admin.command('ping')
+client = MongoClient(MONGO_KEY, server_api=ServerApi('1'))
 
-# DB Methods
-def load_csv_to_mongodb(data, db, collection):    
+
+def get_similarity(query, db, collection):
     db = client[db]
     collection = db[collection]
     
-    # Check if the data is already loaded
-    if collection.estimated_document_count() > 0:
-        print("Data already loaded into the database.")
-        return
-    else:
-        # Insert data into the collection
-        collection.insert_many(data)
-        generate_embeddings_for_db_OA(db, collection)
-        print(f"Data loaded successfully into {db}.{collection}")
-
-def generate_embeddings_for_db(db, collection):
-    db = client[db]
-    collection = db[collection]
-    query = {"question": {"$exists": True, "$ne": ""}, "answer": {"$exists": True, "$ne": ""}}
-    x = collection.find(query)
-    for data_chunk in collection.find(query):
-        comb_emb = generate_embedding_HF(data_chunk['question'] + " [SEP] " + data_chunk['answer'])
-        update = {
-            '$set': {
-                'combined_embedding': comb_emb
+    results = collection.aggregate([
+        {"$vectorSearch": {
+            "queryVector": generate_embedding_HF(query),
+            "path": "combined_embedding",
+            "numCandidates": 98,
+            "limit": 5,
+            "index" : SEARCH_I_NAME,
             }
         }
-        collection.update_one({'_id': data_chunk['_id']}, update)
+    ])
+    return results
 
-
-
-# Prepare data for Elasticsearch
-def generate_data(df):
-    for index, row in df.iterrows():
-        yield {
-            "_index": "mental_health_qa",
-            "_type": "record",
-            "_id": index,
-            "_source": {
-                "question": row['Question'],
-                "answer": row['Answer']
-            }
-        }
-
-
-
-def STACK_DEFINED_RAG():
-    # questions = df['Questions'].tolist()
-    # answers = df['Answers'].tolist()
-
-    # data_for_rag = [{'question': q, 'answer': a} for q, a in zip(questions, answers)]
+def compare_embeddings_to_input(text, db, collection):
     pass
 
-def save_to_db(data):
-    # db = Chroma.from_documents(data_for_rag, OpenAIEmbeddings(), persist_directory = CHROMA_PATH)
-    
-    # Create a new client and connect to the server
-    
-    pass
 
 if __name__ == '__main__':
     # Load the CSV file
@@ -104,11 +57,5 @@ if __name__ == '__main__':
     answers = df['Answers'].tolist()
 
     data_for_db = [{'question': q, 'answer': a} for q, a in zip(questions, answers)]
-    # load_csv_to_mongodb(data_for_db, DB_NAME, COLLECTION_NAME)
-
-    
-    # # Connect to local Elasticsearch instance
-    # es = Elasticsearch()
-
-    # # Bulk index the data
-    # bulk(es, generate_data(df))
+    load_csv_to_mongodb(data_for_db, client, DB_NAME, COLLECTION_NAME)
+    x = get_similarity("depression", DB_NAME, COLLECTION_NAME)

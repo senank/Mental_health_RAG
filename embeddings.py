@@ -10,7 +10,9 @@ from pdb import set_trace as pdb
 
 
 import os
-# Open AI Usage
+
+# Embeddings #
+# OA
 def get_embedding_function_OA():
     embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
     return embeddings
@@ -20,7 +22,7 @@ def generate_embedding_OA(text: str) -> list[float]:
     v = emb.embed_query(text)
     return v
 
-
+# all-miniLM-L6-v2
 def get_embedding_function_HF():
     embeddings = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
     return embeddings
@@ -30,7 +32,8 @@ def generate_embedding_HF(text: str) -> list[float]:
     v = emb.encode(text).tolist()
     return v
 
-
+# Responses #
+# OA
 def get_response_OA_key(prompt):
     model = ChatOpenAI()
     response = model.predict(prompt)
@@ -39,9 +42,8 @@ def get_response_OA_key(prompt):
 def get_response_OA_HF(prompt):
     generator = pipeline("text-generation", model="openai-community/gpt2")
     generator(prompt, max_new_tokens=250)
-    pdb()
 
-
+# Ollama
 def get_response_Ollama(prompt):
     # Load model and tokenizer
     model_name = "meta-llama/Llama-2-7b-hf"
@@ -68,4 +70,7 @@ cognitive states.",
         "content":prompt})
     return response
     
-    
+def get_response_Ollama_local(prompt):
+    # Running Ollama mistral locally
+    model = Ollama(model='llama3')
+    return model.invoke(prompt)

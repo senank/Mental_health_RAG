@@ -1,12 +1,11 @@
 import pandas as pd
 
-from embeddings import generate_embedding_HF, get_response_Ollama_pipe
+from embeddings import generate_embedding_HF, get_response_Ollama_local
 from db_helpers import load_csv_to_mongodb
 from prompt import context_from_data, PROMPT_TEMPLATE
 import openai
 
 import transformers
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 
 from pymongo.mongo_client import MongoClient
@@ -57,7 +56,7 @@ def get_similarity(query, collection):
 
 
 def get_response(prompt):
-    return get_response_Ollama_pipe(prompt)
+    return get_response_Ollama_local(prompt)
 
 def generate_response(query, db, collection):
     db = client[db]
@@ -77,8 +76,8 @@ def generate_prompt(query, data):
 
 def format_response(response, data):
     sources = []
-    for i in range(data):
-        sources.append("ID{}".format(i, data[i]['id']))
+    for i in range(len(data)):
+        sources.append("ID_{}".format(data[i]['_id']))
     return "{}. \n (Sources: {})".format(response, ", ".join(sources))
     
 

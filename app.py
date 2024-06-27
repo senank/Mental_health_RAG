@@ -1,4 +1,4 @@
-from main import generate_response, DB_NAME, COLLECTION_NAME  
+from load_data import generate_response, DB_NAME, COLLECTION_NAME  
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi 
 import os 

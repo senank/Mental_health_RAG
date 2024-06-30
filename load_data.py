@@ -77,7 +77,7 @@ def format_response(response, data):
     sources = []
     for i in range(len(data)):
         sources.append("ID_{}".format(data[i]['_id']))
-    return "{}. \n (Sources: {})".format(response, ", ".join(sources))
+    return "\n{}.\n\n(Sources: {})".format(response, ", ".join(sources))
     
 
 if __name__ == '__main__':

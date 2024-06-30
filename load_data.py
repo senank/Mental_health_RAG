@@ -1,6 +1,7 @@
 import pandas as pd
 
-from embeddings import generate_embedding_HF, get_response_Ollama_local
+from embeddings import generate_embedding_HF
+from response import get_response_Ollama_local
 from db_helpers import load_csv_to_mongodb
 from prompt import context_from_data, PROMPT_TEMPLATE
 import openai

@@ -15,6 +15,6 @@ if __name__ == '__main__':
             question_mode = False
             break
         prompt = input("What can I help you with today?\n")
-        print(generate_response(prompt, DB_NAME, COLLECTION_NAME))
+        print(generate_response(prompt, client, DB_NAME, COLLECTION_NAME))
     
     print("Thank you for using your mental health companion, if there is anything else I can help in the future please don't be shy! :)")

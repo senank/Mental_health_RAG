@@ -49,7 +49,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
        }
    }
    ```
-4. Start Ollama and run:
+4. Start a local Ollama model by running:
    ```
    ollama run mistral
    ```

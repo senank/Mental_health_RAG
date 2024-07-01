@@ -52,22 +52,12 @@ def get_similarity(query, collection):
         }
     ])
     return results
+    
 
-
+# Prompt/Response formating helpers
 def get_response(prompt):
     return get_response_Ollama_local(prompt)
 
-def generate_response(query, client, db, collection):
-    db = client[db]
-    collection = db[collection]
-    data = list(get_similarity(query, collection))
-    prompt = generate_prompt(query, data)
-    response = get_response(prompt)
-    formatted_response = format_response(response, data)
-    return formatted_response
-    
-    
-# Prompt/Response formating
 def generate_prompt(query, data):
     context = context_from_data(data)
     prompt = PROMPT_TEMPLATE.format(query=query, context=context)
@@ -78,7 +68,16 @@ def format_response(response, data):
     for i in range(len(data)):
         sources.append("ID_{}".format(data[i]['_id']))
     return "\n{}.\n\n(Sources: {})".format(response, ", ".join(sources))
-    
+
+# Response generation
+def generate_response(query, client, db, collection):
+    db = client[db]
+    collection = db[collection]
+    data = list(get_similarity(query, collection))
+    prompt = generate_prompt(query, data)
+    response = get_response(prompt)
+    formatted_response = format_response(response, data)
+    return formatted_response
 
 if __name__ == '__main__':
     #Connect to DB

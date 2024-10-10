@@ -10,7 +10,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
 - **Response Generation:** Uses LLAMA for generating accurate and context-aware responses.
 
 ## System Requirements
-- Python 3.12+
+- Python 3.11
 - MongoDB Atlas account
 - Hugging Face transformers
 - PyTorch

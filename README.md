@@ -29,7 +29,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
 
 
 ## Usage
-1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```main.py``` i.e. ```DB_NAME, COLLECTION_NAME```.
+1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```app.py``` i.e. ```DB_NAME, COLLECTION_NAME```.
 2. Add HuggingFace and MongoDB Atlas tokens as environment variables (```$ HF_TOKEN``` and ```$ MONGO_TOKEN``` respectively), or change them in ```main.py``` under ```API Constants```.
 3. Run load.py to populate the database with data and embeddings
    ```

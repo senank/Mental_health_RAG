@@ -10,7 +10,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
 - **Response Generation:** Uses LLAMA for generating accurate and context-aware responses.
 
 ## System Requirements
-- Python 3.11
+- Python 3.12
 - MongoDB Atlas account
 - Hugging Face transformers
 - PyTorch
@@ -30,7 +30,7 @@ This project demonstrates the implementation of a Retrieval-Augmented Generation
 
 ## Usage
 1. Start the MongoDB Atlas cluster; ensure to create a database and collection that have the same name as the constants defined in ```app.py``` i.e. ```DB_NAME, COLLECTION_NAME```.
-2. Add HuggingFace and MongoDB Atlas tokens as environment variables (```$ HF_TOKEN``` and ```$ MONGO_TOKEN``` respectively), or change them in ```main.py``` under ```API Constants```.
+2. Add HuggingFace and MongoDB Atlas tokens as environment variables (```$ HF_TOKEN``` and ```$ MONGO_TOKEN``` respectively), or change them in ```app.py``` under ```API Constants```.
 3. Run load.py to populate the database with data and embeddings
    ```
    python load_data.py
